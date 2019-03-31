@@ -18,7 +18,7 @@ class Task extends Component {
     }
 
     handleDelete(){
-      this.props.deleteTask(this.props.taskType, this.props.taskId)
+      this.props.deleteTask(this.props.taskId)
     }
 
     handleEditToggle(){
@@ -35,15 +35,15 @@ class Task extends Component {
     handleEditFormSubmit(e){
       e.preventDefault()
       this.handleEditToggle()
-      this.props.updateTaskContent(this.props.taskType, this.props.taskId, this.state.editFormValue)
+      this.props.updateTaskContent(this.props.taskId, this.state.editFormValue)
     }
 
     handleComplete(){
-      this.props.updateTaskField(this.props.taskType, this.props.taskId, 'completed', true)
+      this.props.updateTaskField(this.props.taskId, 'completed', true)
     }
 
     handleDefer(){
-      this.props.updateTaskField(this.props.taskType, this.props.taskId, 'deferred', true)
+      this.props.updateTaskField(this.props.taskId, 'deferred', true)
     }
 
     generateTaskBody(){

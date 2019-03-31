@@ -9,7 +9,7 @@ class SidebarTask extends Component {
   }
 
   handleRemove(){
-    this.props.updateTaskField(this.props.taskType, this.props.taskId, this.props.listName, false)
+    this.props.updateTaskField(this.props.taskId, this.props.listName, false)
   }
 
   render(){

@@ -6,9 +6,8 @@ import SidebarTask from './SidebarTask';
 class SidebarList extends Component {
 
   generateTasks(){
-    const combinedTasks = [...this.props.basicTasks, ...this.props.researchTasks, ...this.props.lightbulbTasks, ...this.props.liveIssueTasks]
     const listName = this.props.listName
-    const taskComponents = combinedTasks.map((task, index) => {
+    const taskComponents = this.props.tasks.map((task) => {
       if(task[listName]){
         return (<SidebarTask key={task.id} taskType={task.taskType} taskId={task.id} content={task.content} listName={this.props.listName} updateTaskField={this.props.updateTaskField} />)
       }

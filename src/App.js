@@ -10,18 +10,12 @@ class App extends Component {
   constructor(){
     super()
     this.state = {
-      tasks:{
-        basicTasks: [],
-        lightbulbTasks: [],
-        researchTasks: [],
-        liveIssueTasks: []
-      },
+      tasks:[],
       visibleSidebars: {
         completed: false,
         deferred: false
       },
       usedIds: [],
-      renderDeferred: false
     }
     this.addNewTask = this.addNewTask.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
@@ -29,7 +23,7 @@ class App extends Component {
     this.updateTaskContent = this.updateTaskContent.bind(this)
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.resetDeferments = this.resetDeferments.bind(this)
-
+    this.flushIds = this.flushIds.bind(this)
   }
 
   listIcons = {
@@ -40,50 +34,36 @@ class App extends Component {
   }
 
   componentDidMount(){
-    const storedTasks = JSON.parse(localStorage.getItem('storedTasks')) || {};
+    let storedTasks = JSON.parse(localStorage.getItem('storedTasks')) || [];
     const storedLastDate = JSON.parse(localStorage.getItem('lastDateAccessed')) || new Date().setHours(0,0,0,0)
     const currentDateNormalized = new Date().setHours(0,0,0,0);
-    let tasks = {
-      basicTasks: storedTasks.basicTasks || [],
-      lightbulbTasks: storedTasks.lightbulbTasks || [],
-      researchTasks: storedTasks.researchTasks || [],
-      liveIssueTasks: storedTasks.liveIssueTasks || []
-    }
     if(currentDateNormalized !== storedLastDate){
       //Its tomorrow and we need to undefer all tasks
-      tasks = this.resetDeferments(tasks)
-      localStorage.setItem('storedTasks', JSON.stringify(tasks))
+      storedTasks = this.resetDeferments(storedTasks)
+      localStorage.setItem('storedTasks', JSON.stringify(storedTasks))
     }
     //Always update the stored date with today's date, whatever happens, as it needs to know the last time we opened app:
     localStorage.setItem('lastDateAccessed', currentDateNormalized)
     this.setState({ 
-      tasks: tasks,
+      tasks: storedTasks,
       usedIds: JSON.parse(localStorage.getItem('usedIds')) || []
     })
   }
 
   resetDeferments(tasks){
-    const resetTasks = {}
-    Object.keys(tasks).forEach((key)=>{
-      const currentTaskList = tasks[key]
-      const resetTaskList = currentTaskList.map((task)=>{
-        task.deferred = false
-        return task
-      })
-      resetTasks[key] = resetTaskList
+    const resetTasks = tasks.map((task)=>{
+      task.deferred = false
+      return task
     })
     return resetTasks
   }
 
   addNewTask(taskType, newTask){
-    const currentTasks = this.state.tasks
-    const currentTaskList = currentTasks[taskType]
     newTask.taskType = taskType
     newTask.id = this.generateNewId()
-    const updatedTaskList = [...currentTaskList, newTask]
-    currentTasks[taskType] = updatedTaskList
-    localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
-    this.setState({ tasks: currentTasks })
+    const updatedTaskList = [...this.state.tasks, newTask]
+    localStorage.setItem('storedTasks', JSON.stringify(updatedTaskList))
+    this.setState({ tasks: updatedTaskList })
   }
 
   generateNewId(){
@@ -95,40 +75,37 @@ class App extends Component {
     return newId
   }
 
-  deleteTask(taskType, id){
-    console.log(taskType)
-    console.log(id)
+  flushIds(idToDelete){
+    const updatedIdArray = [...this.state.usedIds].filter((id)=>{ return id !== idToDelete })
+    localStorage.setItem('usedIds', JSON.stringify(updatedIdArray))
+    this.setState({ usedIds: updatedIdArray })
+  }
+
+  deleteTask(id){
     const confirmedDelete = window.confirm("Are you sure?\nThis action cannot be undone");
     if (!confirmedDelete) return false;
-    const currentTasks = {...this.state.tasks}
-    const taskListToFilter = [...currentTasks[taskType]]
-    const updatedTaskList = taskListToFilter.filter((task)=>{ return task.id !== id })
-    console.log(updatedTaskList)
-    currentTasks[taskType] = updatedTaskList
-    localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
-    this.setState({ tasks: currentTasks })
+    const updatedTaskList = [...this.state.tasks].filter((task)=>{ return task.id !== id })
+    this.flushIds(id)
+    localStorage.setItem('storedTasks', JSON.stringify(updatedTaskList))
+    this.setState({ tasks: updatedTaskList })
     
   }
 
-  updateTaskField(taskType, id, field, value){
-    const currentTasks = {...this.state.tasks}
-    const currentTaskList = currentTasks[taskType]
-    currentTaskList.forEach((task)=>{
+  updateTaskField(id, field, value){
+    const updatedTaskList = [...this.state.tasks].map((task)=>{
       if(task.id === id){
         task[field] = value
+        return task
+      } else {
+        return task
       }
     })
-    currentTasks[taskType] = currentTaskList
-    console.log("CURRENTTASKS COPY:  ", currentTasks)
-    console.log("STATE - ORIGINAL:   ", this.state.tasks)
-    localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
-    this.setState({ tasks: currentTasks })
+    localStorage.setItem('storedTasks', JSON.stringify(updatedTaskList))
+    this.setState({ tasks: updatedTaskList })
   }
 
-  updateTaskContent(taskType, id, newContent){
-    const currentTasks = {...this.state.tasks}
-    const currentTaskList = [...currentTasks[taskType]]
-    const updatedTaskList = currentTaskList.map((task)=>{
+  updateTaskContent(id, newContent){
+    const updatedTaskList = [...this.state.tasks].map((task)=>{
       if(task.id === id){
         task.content = newContent
         return task
@@ -136,9 +113,8 @@ class App extends Component {
         return task
       }
     })
-    currentTasks[taskType] = updatedTaskList
-    localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
-    this.setState({ tasks: currentTasks })
+    localStorage.setItem('storedTasks', JSON.stringify(updatedTaskList))
+    this.setState({ tasks: updatedTaskList })
   }
 
   toggleSidebar(sidebarName, boolean){
@@ -152,10 +128,7 @@ class App extends Component {
 
   render() {
     const sharedSidebarProps = {
-      basicTasks: this.state.tasks.basicTasks,
-      lightbulbTasks: this.state.tasks.lightbulbTasks,
-      researchTasks: this.state.tasks.researchTasks,
-      liveIssueTasks: this.state.tasks.liveIssueTasks,
+      tasks: this.state.tasks,
       toggleSidebar: this.toggleSidebar,
       updateTaskField: this.updateTaskField
     }
@@ -163,7 +136,8 @@ class App extends Component {
       addNewTask: this.addNewTask,
       updateTaskField: this.updateTaskField,
       updateTaskContent: this.updateTaskContent,
-      deleteTask: this.deleteTask
+      deleteTask: this.deleteTask,
+      tasks: this.state.tasks
     }
     return (
       <div className="App">
@@ -172,10 +146,10 @@ class App extends Component {
           <div className="header-bar__right"><ControlPanel toggleSidebar={this.toggleSidebar} /></div>
         </header>
         <div className="list-tray">
-          <List heading={"Tasks"} icon={this.listIcons.basicTask} tasks={this.state.tasks.basicTasks} taskType="basicTasks" {...sharedListProps} />
-          <List heading={"Ideas"} icon={this.listIcons.lightbulbTask} tasks={this.state.tasks.lightbulbTasks} taskType="lightbulbTasks" {...sharedListProps} />
-          <List heading={"Research"} icon={this.listIcons.researchTask} tasks={this.state.tasks.researchTasks} taskType="researchTasks" {...sharedListProps} />
-          <List heading={"Live Issues"} icon={this.listIcons.liveIssuesTask} tasks={this.state.tasks.liveIssueTasks} taskType="liveIssueTasks" {...sharedListProps} />
+          <List heading={"Tasks"} icon={this.listIcons.basicTask} taskType="basicTasks" {...sharedListProps} />
+          <List heading={"Ideas"} icon={this.listIcons.lightbulbTask} taskType="lightbulbTasks" {...sharedListProps} />
+          <List heading={"Research"} icon={this.listIcons.researchTask} taskType="researchTasks" {...sharedListProps} />
+          <List heading={"Live Issues"} icon={this.listIcons.liveIssuesTask} taskType="liveIssueTasks" {...sharedListProps} />
           <SidebarList heading={"Completed"} listName={"completed"} visible={this.state.visibleSidebars.completed} {...sharedSidebarProps} />
           <SidebarList heading={"Deferred"} listName={"deferred"} visible={this.state.visibleSidebars.deferred} {...sharedSidebarProps} />
           

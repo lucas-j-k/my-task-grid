@@ -6,9 +6,14 @@ import NewTaskForm from './NewTaskForm';
 class List extends Component {
 
   generateTasks(){
-    const taskComponents = this.props.tasks.map((task, index) => {
-      if(!task.completed && !task.deferred){
-        return (<Task taskType={this.props.taskType} content={task.content} completed={task.completed} deferred={task.deferred} key={index} taskId={task.id} updateTaskField={this.props.updateTaskField} updateTaskContent={this.props.updateTaskContent} deleteTask={this.props.deleteTask} />)
+    const sharedTaskMethods = {
+      updateTaskField: this.props.updateTaskField,
+      updateTaskContent: this.props.updateTaskContent,
+      deleteTask: this.props.deleteTask
+    }
+    const taskComponents = this.props.tasks.map((task) => {
+      if(!task.completed && !task.deferred && task.taskType === this.props.taskType){
+        return (<Task taskType={this.props.taskType} content={task.content} key={task.id} taskId={task.id} {...sharedTaskMethods} />)
       } else {
         return false
       }
