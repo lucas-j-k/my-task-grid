@@ -18,7 +18,7 @@ class Task extends Component {
     }
 
     handleDelete(){
-      this.props.deleteTask(this.props.taskType, this.props.taskIndex)
+      this.props.deleteTask(this.props.taskType, this.props.taskId)
     }
 
     handleEditToggle(){

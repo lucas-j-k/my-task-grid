@@ -82,7 +82,6 @@ class App extends Component {
     newTask.id = this.generateNewId()
     const updatedTaskList = [...currentTaskList, newTask]
     currentTasks[taskType] = updatedTaskList
-    console.log(currentTasks)
     localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
     this.setState({ tasks: currentTasks })
   }
@@ -97,11 +96,14 @@ class App extends Component {
   }
 
   deleteTask(taskType, id){
+    console.log(taskType)
+    console.log(id)
     const confirmedDelete = window.confirm("Are you sure?\nThis action cannot be undone");
     if (!confirmedDelete) return false;
     const currentTasks = {...this.state.tasks}
     const taskListToFilter = [...currentTasks[taskType]]
     const updatedTaskList = taskListToFilter.filter((task)=>{ return task.id !== id })
+    console.log(updatedTaskList)
     currentTasks[taskType] = updatedTaskList
     localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
     this.setState({ tasks: currentTasks })
