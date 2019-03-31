@@ -96,13 +96,13 @@ class App extends Component {
     return newId
   }
 
-  deleteTask(taskType, index){
+  deleteTask(taskType, id){
     const confirmedDelete = window.confirm("Are you sure?\nThis action cannot be undone");
     if (!confirmedDelete) return false;
-    const currentTasks = this.state.tasks
+    const currentTasks = {...this.state.tasks}
     const taskListToFilter = [...currentTasks[taskType]]
-    taskListToFilter.splice(index, 1)
-    currentTasks[taskType] = taskListToFilter
+    const updatedTaskList = taskListToFilter.filter((task)=>{ return task.id !== id })
+    currentTasks[taskType] = updatedTaskList
     localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
     this.setState({ tasks: currentTasks })
     
@@ -110,34 +110,31 @@ class App extends Component {
 
   updateTaskField(taskType, id, field, value){
     const currentTasks = {...this.state.tasks}
-    console.log(currentTasks)
     const currentTaskList = currentTasks[taskType]
-    console.log(currentTaskList)
     currentTaskList.forEach((task)=>{
       if(task.id === id){
         task[field] = value
       }
     })
     currentTasks[taskType] = currentTaskList
+    console.log("CURRENTTASKS COPY:  ", currentTasks)
+    console.log("STATE - ORIGINAL:   ", this.state.tasks)
     localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
     this.setState({ tasks: currentTasks })
-
   }
 
-  // updateTaskField(taskType, id, field, value){
-  //   const currentTasks = this.state.tasks
-  //   currentTasks[taskType].forEach((task)=>{
-  //     if(task.id === id){
-  //       task[field] = value
-  //     }
-  //   })
-  //   this.setState({ tasks: currentTasks })
-  // }
-
-  updateTaskContent(taskType, index, newContent){
-    const currentTasks = this.state.tasks
+  updateTaskContent(taskType, id, newContent){
+    const currentTasks = {...this.state.tasks}
     const currentTaskList = [...currentTasks[taskType]]
-    currentTaskList[index].content = newContent
+    const updatedTaskList = currentTaskList.map((task)=>{
+      if(task.id === id){
+        task.content = newContent
+        return task
+      } else {
+        return task
+      }
+    })
+    currentTasks[taskType] = updatedTaskList
     localStorage.setItem('storedTasks', JSON.stringify(currentTasks))
     this.setState({ tasks: currentTasks })
   }

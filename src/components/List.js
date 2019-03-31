@@ -8,7 +8,7 @@ class List extends Component {
   generateTasks(){
     const taskComponents = this.props.tasks.map((task, index) => {
       if(!task.completed && !task.deferred){
-        return (<Task taskType={this.props.taskType} content={task.content} completed={task.completed} deferred={task.deferred} key={index} taskIndex={index} updateTaskField={this.props.updateTaskField} updateTaskContent={this.props.updateTaskContent} deleteTask={this.props.deleteTask} />)
+        return (<Task taskType={this.props.taskType} content={task.content} completed={task.completed} deferred={task.deferred} key={index} taskId={task.id} updateTaskField={this.props.updateTaskField} updateTaskContent={this.props.updateTaskContent} deleteTask={this.props.deleteTask} />)
       } else {
         return false
       }
