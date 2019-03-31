@@ -1,0 +1,241 @@
+* {
+    box-sizing: border-box;
+}
+
+h1,h2,h3,h4,h6 {
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+body {
+    @include svg-bg;
+    color: $black;
+    font-family: $font-body;
+    font-size: $font-md;
+}
+
+.font-title {
+    font-family: $font-title;
+}
+
+
+.list-tray {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.list {
+    width: 280px;
+    margin: $spacing-md;
+
+    &__heading {
+        background-color: $primary-darker;
+        font-size: $font-lg;
+        font-weight: bold;
+        color: $primary-lighter;
+        padding: $spacing-md;
+        text-align: center;
+        letter-spacing: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__heading-text {
+        margin-right: $spacing-sm;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        i {
+            font-size: $font-lg;
+        }
+    }
+
+    
+}
+
+.sidebar {
+    @include box-shadow;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    background-color: $primary-darker;
+    margin: 0;
+    border-radius: 0;
+    width: $sidebar-width;
+    overflow-y: scroll;
+    transition: 0.6s;
+    z-index: 100;
+
+    &--hidden {
+        right: - + $sidebar-width;
+    }
+
+    &__heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $primary-lighter;
+        padding: $spacing-md;
+    }
+    &__heading-text {
+        font-size: $font-lg;
+    }
+
+    &__heading-button {
+        background: transparent;
+        color: inherit;
+        border: 0;
+        font-size: $font-md;
+        display: flex;
+        align-items: center;
+        i {
+            font-size: inherit;
+            margin-left: $spacing-sm;
+        }
+    }
+
+}
+
+.new-task {
+    padding: $spacing-md;
+    background-color: $primary-lighter;
+
+    &__heading {
+        margin-bottom: $spacing-sm;
+        font-size: $font-md;
+    }
+
+    &__input {
+        padding: $spacing-sm;
+        border: 2px solid $primary-light;
+        width: 100%;
+        overflow: hidden;
+        resize: none;
+    }
+}
+
+
+.task {
+    background-color: $primary;
+    margin: $spacing-md 0;
+    overflow: auto;
+    &--editing {
+        background-color: $primary-light;
+    }
+    &__main {
+        width: 100%;
+    }
+
+    &__control-panel {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__control {
+        background-color: $primary;
+        color: $white;
+        padding: $spacing-sm;
+        border: 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i {
+            font-size: $font-sm;
+        }
+    }
+
+    &__text-content {
+        padding: $spacing-sm;
+        background-color: $white;
+        margin: $spacing-md;
+        overflow-wrap: break-word;
+    }
+
+    &__edit-form {
+        display: flex;
+    }
+
+    &__edit-input {
+        padding: $spacing-sm;
+        margin: $spacing-md;
+        width: 100%;
+        border: 3px solid $primary-dark;
+        overflow: hidden;
+        resize: none;
+    }
+}
+
+.sidebar-task {
+
+    &:hover {
+        background-color: $primary-dark;
+    }
+
+    &__main {
+        display: flex;
+        align-items: center;
+        padding: 0 $spacing-sm;
+        justify-content: flex-start;
+    }
+
+    &__text-content {
+        width: 80%;
+        padding: $spacing-sm;
+        background-color: $white;
+        overflow-wrap: break-word;
+    }
+
+    &__control {
+        background: transparent;
+        display: flex;
+        padding: $spacing-sm;
+        align-items: center;
+        margin-right: $spacing-sm;
+        border: 0;
+        color: $primary-lighter;
+        i {
+            font-size: $font-lg;
+        }
+    }
+}
+
+.header-bar {
+    background-color: $primary-darker;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-sm;
+    &__title {
+        color: $primary-light;
+        font-size: $font-md;
+        padding: $spacing-sm;
+        font-weight: bold;
+    }
+}
+
+.control-panel {
+
+    &__button {
+        padding: $spacing-xs;
+        background-color: transparent;
+        color: $primary-light;
+        border: 0;
+        font-weight: bold;
+        margin: 0 $spacing-sm;
+        font-size: $font-md;
+    }
+}
