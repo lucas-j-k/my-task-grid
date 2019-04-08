@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import List from './components/List';
 import SidebarList from './components/SidebarList';
 import ControlPanel from './components/ControlPanel';
+import HelpScreen from './components/HelpScreen';
 
 
 class App extends Component {
@@ -15,6 +16,7 @@ class App extends Component {
         completed: false,
         deferred: false
       },
+      showModal: false,
       usedIds: [],
     }
     this.addNewTask = this.addNewTask.bind(this)
@@ -24,6 +26,7 @@ class App extends Component {
     this.toggleSidebar = this.toggleSidebar.bind(this)
     this.resetDeferments = this.resetDeferments.bind(this)
     this.flushIds = this.flushIds.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
   }
 
   listIcons = {
@@ -48,6 +51,11 @@ class App extends Component {
       tasks: storedTasks,
       usedIds: JSON.parse(localStorage.getItem('usedIds')) || []
     })
+  }
+
+  toggleModal(){
+    const newValue = this.state.showModal ? false : true;
+    this.setState({ showModal: newValue })
   }
 
   resetDeferments(tasks){
@@ -140,10 +148,10 @@ class App extends Component {
       tasks: this.state.tasks
     }
     return (
-      <div className="App">
+      <div className="app">
         <header className="header-bar">
-          <div className="header-bar__left"><span className="header-bar__title">My Tasks</span></div>
-          <div className="header-bar__right"><ControlPanel toggleSidebar={this.toggleSidebar} /></div>
+          <div className="header-bar__left"><span className="header-bar__title">My TaskGrid</span></div>
+          <div className="header-bar__right"><ControlPanel toggleSidebar={this.toggleSidebar} toggleModal={this.toggleModal} /></div>
         </header>
         <div className="list-tray">
           <List heading={"Tasks"} icon={this.listIcons.basicTask} taskType="basicTasks" {...sharedListProps} />
@@ -152,8 +160,8 @@ class App extends Component {
           <List heading={"Live Issues"} icon={this.listIcons.liveIssuesTask} taskType="liveIssueTasks" {...sharedListProps} />
           <SidebarList heading={"Completed"} listName={"completed"} visible={this.state.visibleSidebars.completed} {...sharedSidebarProps} />
           <SidebarList heading={"Deferred"} listName={"deferred"} visible={this.state.visibleSidebars.deferred} {...sharedSidebarProps} />
-          
         </div>
+        <HelpScreen visible={this.state.showModal} toggleModal={this.toggleModal} />
       </div>
     );
   }

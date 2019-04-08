@@ -22,7 +22,7 @@ class SidebarList extends Component {
       <div className={listClassName}>
         <div className="sidebar__heading font-title">
           <h3 className="sidebar__heading-text">{this.props.heading}</h3>
-          <button className="sidebar__heading-button" onClick={()=>{this.props.toggleSidebar(this.props.listName, false)}}>Close <i className="im im-x-mark"></i></button>
+          <button className="button" onClick={()=>{this.props.toggleSidebar(this.props.listName, false)}}>Close <i className="im im-x-mark"></i></button>
         </div>
         { this.generateTasks() }
       </div>

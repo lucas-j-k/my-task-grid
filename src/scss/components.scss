@@ -1,0 +1,14 @@
+//Reusable component classes
+
+.button {
+    background: transparent;
+    color: $primary-lighter;
+    border: 0;
+    font-size: $font-md;
+    display: flex;
+    align-items: center;
+    i {
+        font-size: inherit;
+        margin-left: $spacing-sm;
+    }
+}
