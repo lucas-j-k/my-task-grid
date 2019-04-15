@@ -1,3 +1,12 @@
+## My Task Grid
+A Task manager / To-do app built with React.
+
+Uses browser local storage to store and load task data.
+
+Includes ability to 'Defer' tasks, removing them from the visible task lists, to re-appear the next day.
+
+## Built with Create-React-App:
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
